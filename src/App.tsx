@@ -36,7 +36,7 @@ export default function App() {
           />
         </main>
         <footer className="mt-5 text-center text-xs text-slate-600 dark:text-slate-300">
-          Built with React
+          © 2026 Jaydeep Kanzariya
         </footer>
       </div>
     </div>

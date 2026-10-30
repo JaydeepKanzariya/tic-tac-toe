@@ -2,7 +2,7 @@
 
 A two-player (same device) Tic Tac Toe game built with React, TypeScript and Tailwind CSS v4. It has a scoreboard, alternating starting players and full keyboard support.
 
-Live: <to be added after deploy>
+Live: https://tic-tac-toe-psi-nine-94.vercel.app/
 
 ## Features
 - 3x3 board of real buttons, X starts round 1, turns alternate

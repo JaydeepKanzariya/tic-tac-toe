@@ -1,5 +1,71 @@
 @import "tailwindcss";
 
+/*
+ * Design tokens. Components use semantic utilities (bg-card, text-ink, ...)
+ * and never reference a palette colour or a `dark:` variant directly, so a
+ * theme is changed in this one file.
+ */
+:root {
+  color-scheme: light dark;
+
+  --page: var(--color-slate-100);
+  --card: #fff;
+  --cell: #fff;
+  --cell-hover: var(--color-slate-50);
+  --subtle: var(--color-slate-100);
+  --line: var(--color-slate-200);
+  --grid: var(--color-slate-300);
+  --ink: var(--color-slate-900);
+  --ink-muted: var(--color-slate-600);
+  --accent: var(--color-rose-600);
+  --accent-hover: var(--color-rose-700);
+  --on-accent: #fff;
+  --accent-soft: var(--color-rose-100);
+  --accent-ink: var(--color-rose-600);
+  --focus: var(--color-rose-500);
+  --mark-x: var(--color-rose-600);
+  --mark-o: var(--color-sky-600);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: var(--color-slate-950);
+    --card: var(--color-slate-900);
+    --cell: var(--color-slate-900);
+    --cell-hover: var(--color-slate-800);
+    --subtle: var(--color-slate-800);
+    --line: var(--color-slate-800);
+    --grid: var(--color-slate-600);
+    --ink: var(--color-slate-100);
+    --ink-muted: var(--color-slate-300);
+    --accent-soft: var(--color-rose-950);
+    --accent-ink: var(--color-rose-400);
+    --focus: var(--color-rose-400);
+    --mark-x: var(--color-rose-400);
+    --mark-o: var(--color-sky-400);
+  }
+}
+
+@theme inline {
+  --color-page: var(--page);
+  --color-card: var(--card);
+  --color-cell: var(--cell);
+  --color-cell-hover: var(--cell-hover);
+  --color-subtle: var(--subtle);
+  --color-line: var(--line);
+  --color-grid: var(--grid);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-on-accent: var(--on-accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-ink: var(--accent-ink);
+  --color-focus: var(--focus);
+  --color-mark-x: var(--mark-x);
+  --color-mark-o: var(--mark-o);
+}
+
 @theme {
   --animate-pop-in: pop-in 160ms ease-out;
 
@@ -13,8 +79,4 @@
       transform: scale(1);
     }
   }
-}
-
-:root {
-  color-scheme: light dark;
 }

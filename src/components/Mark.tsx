@@ -7,7 +7,7 @@ interface MarkProps {
 
 export function Mark({ player, className = '' }: MarkProps) {
   const color =
-    player === 'X' ? 'text-rose-600 dark:text-rose-400' : 'text-sky-600 dark:text-sky-400'
+    player === 'X' ? 'text-mark-x' : 'text-mark-o'
 
   return (
     <svg

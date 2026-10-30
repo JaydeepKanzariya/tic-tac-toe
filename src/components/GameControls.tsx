@@ -5,11 +5,11 @@ interface GameControlsProps {
 }
 
 const BASE =
-  'min-h-11 flex-1 rounded-xl px-4 text-sm font-semibold outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900'
+  'min-h-11 flex-1 rounded-xl px-4 text-sm font-semibold outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-card'
 
 export function GameControls({ canResetScores, onNewGame, onResetScores }: GameControlsProps) {
   const resetStyle = canResetScores
-    ? 'hover:bg-slate-100 dark:hover:bg-slate-800'
+    ? 'hover:bg-subtle'
     : 'cursor-not-allowed opacity-50'
 
   return (
@@ -17,7 +17,7 @@ export function GameControls({ canResetScores, onNewGame, onResetScores }: GameC
       <button
         type="button"
         onClick={onNewGame}
-        className={`${BASE} bg-rose-600 text-white hover:bg-rose-700`}
+        className={`${BASE} bg-accent text-on-accent hover:bg-accent-hover`}
       >
         New game
       </button>
@@ -29,7 +29,7 @@ export function GameControls({ canResetScores, onNewGame, onResetScores }: GameC
             onResetScores()
           }
         }}
-        className={`${BASE} border border-slate-300 text-slate-800 dark:border-slate-600 dark:text-slate-100 ${resetStyle}`}
+        className={`${BASE} border border-grid text-ink ${resetStyle}`}
       >
         Reset scores
       </button>

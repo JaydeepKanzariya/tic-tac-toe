@@ -27,9 +27,9 @@ export function Square({
   onFocus,
 }: SquareProps) {
   const background = isWinning
-    ? 'border-2 border-rose-600 bg-rose-100 dark:border-rose-400 dark:bg-rose-950'
-    : 'bg-white dark:bg-slate-900'
-  const hover = disabled ? 'cursor-default' : 'hover:bg-slate-50 dark:hover:bg-slate-800'
+    ? 'border-2 border-accent bg-accent-soft'
+    : 'bg-cell'
+  const hover = disabled ? 'cursor-default' : 'hover:bg-cell-hover'
   const dim = dimmed ? 'opacity-50' : ''
 
   return (
@@ -45,7 +45,7 @@ export function Square({
           onSelect()
         }
       }}
-      className={`group flex aspect-square items-center justify-center outline-none transition-opacity focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-inset ${background} ${hover} ${dim}`}
+      className={`group flex aspect-square items-center justify-center outline-none transition-opacity focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-inset ${background} ${hover} ${dim}`}
     >
       {cell !== null && (
         <Mark player={cell} className="h-3/5 w-3/5 animate-pop-in motion-reduce:animate-none" />

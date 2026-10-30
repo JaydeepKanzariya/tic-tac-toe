@@ -24,7 +24,7 @@ export function Board({ board, winResult, draw, gameOver, currentPlayer, onPlay 
       role="group"
       aria-label="Game board"
       onKeyDown={onKeyDown}
-      className={`mx-auto grid w-full max-w-sm grid-cols-3 gap-1 overflow-hidden rounded-xl border-4 border-slate-300 bg-slate-300 sm:max-w-md dark:border-slate-600 dark:bg-slate-600 ${draw ? 'opacity-70' : ''}`}
+      className={`mx-auto grid w-full max-w-sm grid-cols-3 gap-1 overflow-hidden rounded-xl border-4 border-grid bg-grid ${draw ? 'opacity-70' : ''}`}
     >
       {board.map((cell, index) => {
         const isWinning = winResult?.line.includes(index) ?? false

@@ -41,3 +41,17 @@ export function getNextPlayer(board: Board, starter: Player): Player {
   }
   return starter === 'X' ? 'O' : 'X'
 }
+
+export function getStatusText(
+  winResult: WinResult | null,
+  draw: boolean,
+  currentPlayer: Player | null,
+): string {
+  if (winResult) {
+    return `Player ${winResult.winner} wins!`
+  }
+  if (draw || currentPlayer === null) {
+    return "It's a draw!"
+  }
+  return `Player ${currentPlayer}'s turn`
+}

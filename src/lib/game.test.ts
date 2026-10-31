@@ -5,6 +5,7 @@ import {
   createEmptyBoard,
   getNextPlayer,
   getStarter,
+  getLineSegment,
   getStatusText,
   isDraw,
 } from './game'
@@ -72,5 +73,28 @@ describe('getStatusText', () => {
     expect(getStatusText(null, false, 'O')).toBe("Player O's turn")
     expect(getStatusText({ winner: 'O', line: [0, 1, 2] }, false, null)).toBe('Player O wins!')
     expect(getStatusText(null, true, null)).toBe("It's a draw!")
+  })
+})
+
+describe('getLineSegment', () => {
+  it('runs through the end cells of a row, column and diagonal', () => {
+    expect(getLineSegment([0, 1, 2])).toEqual({ x1: 0.2, y1: 0.5, x2: 2.8, y2: 0.5 })
+    const column = getLineSegment([1, 4, 7])
+    expect(column.x1).toBeCloseTo(1.5)
+    expect(column.y1).toBeCloseTo(0.2)
+    expect(column.y2).toBeCloseTo(2.8)
+    const diagonal = getLineSegment([2, 4, 6])
+    expect(diagonal.x1).toBeGreaterThan(2.5)
+    expect(diagonal.x2).toBeLessThan(0.5)
+  })
+
+  it('stays inside the board for every winning line', () => {
+    for (const line of WINNING_LINES) {
+      const { x1, y1, x2, y2 } = getLineSegment(line)
+      for (const value of [x1, y1, x2, y2]) {
+        expect(value).toBeGreaterThan(0)
+        expect(value).toBeLessThan(3)
+      }
+    }
   })
 })

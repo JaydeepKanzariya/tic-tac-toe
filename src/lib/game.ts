@@ -55,3 +55,26 @@ export function getStatusText(
   }
   return `Player ${currentPlayer}'s turn`
 }
+
+export interface LineSegment {
+  x1: number
+  y1: number
+  x2: number
+  y2: number
+}
+
+const LINE_OVERSHOOT = 0.3
+
+function getCellCenter(index: number): [number, number] {
+  return [(index % 3) + 0.5, Math.floor(index / 3) + 0.5]
+}
+
+/** Segment through a winning line in a 3x3 unit grid, extended slightly past the end cells. */
+export function getLineSegment(line: readonly [number, number, number]): LineSegment {
+  const [x1, y1] = getCellCenter(line[0])
+  const [x2, y2] = getCellCenter(line[2])
+  const length = Math.hypot(x2 - x1, y2 - y1)
+  const dx = ((x2 - x1) / length) * LINE_OVERSHOOT
+  const dy = ((y2 - y1) / length) * LINE_OVERSHOOT
+  return { x1: x1 - dx, y1: y1 - dy, x2: x2 + dx, y2: y2 + dy }
+}

@@ -1,4 +1,5 @@
 import { Square } from './Square'
+import { WinLine } from './WinLine'
 import { useRovingFocus } from '../hooks/useRovingFocus'
 import type { Board as BoardState, Player, WinResult } from '../types'
 
@@ -24,7 +25,7 @@ export function Board({ board, winResult, draw, gameOver, currentPlayer, onPlay 
       role="group"
       aria-label="Game board"
       onKeyDown={onKeyDown}
-      className={`mx-auto grid w-full max-w-sm grid-cols-3 gap-1 overflow-hidden rounded-xl border-4 border-grid bg-grid ${draw ? 'opacity-70' : ''}`}
+      className={`relative mx-auto grid w-full max-w-sm grid-cols-3 gap-1 overflow-hidden rounded-xl border-4 border-grid bg-grid ${draw ? 'opacity-70' : ''}`}
     >
       {board.map((cell, index) => {
         const isWinning = winResult?.line.includes(index) ?? false
@@ -49,6 +50,7 @@ export function Board({ board, winResult, draw, gameOver, currentPlayer, onPlay 
           />
         )
       })}
+      {winResult && <WinLine line={winResult.line} />}
     </div>
   )
 }

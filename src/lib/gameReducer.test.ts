@@ -3,7 +3,7 @@ import { getBoard } from './game'
 import { reducer } from './gameReducer'
 import type { GameState } from '../types'
 
-const fresh: GameState = { moves: [], scores: { X: 0, O: 0, draws: 0 }, round: 1 }
+const fresh: GameState = { moves: [], scores: { X: 0, O: 0, draws: 0 }, round: 1, mode: 'two-player' }
 
 function play(state: GameState, ...moves: number[]): GameState {
   return moves.reduce((next, index) => reducer(next, { type: 'PLAY', index }), state)
@@ -69,6 +69,37 @@ describe('reducer UNDO', () => {
   it('does nothing once the round is finished, so scores stay correct', () => {
     const won = play(fresh, 0, 3, 1, 4, 2)
     expect(reducer(won, { type: 'UNDO' })).toBe(won)
+  })
+})
+
+describe('reducer UNDO against the computer', () => {
+  const vsComputer: GameState = { ...fresh, mode: 'hard' }
+
+  it('takes back both the human move and the computer reply', () => {
+    const undone = reducer(play(vsComputer, 4, 0), { type: 'UNDO' })
+    expect(undone.moves).toEqual([])
+  })
+
+  it('does nothing when only the computer has moved', () => {
+    const computerFirst = play({ ...vsComputer, round: 2 }, 4)
+    expect(reducer(computerFirst, { type: 'UNDO' })).toBe(computerFirst)
+  })
+})
+
+describe('reducer SET_MODE', () => {
+  it('switches opponent with a fresh board, scoreboard and round', () => {
+    const next = reducer(play({ ...fresh, round: 3 }, 0), { type: 'SET_MODE', mode: 'easy' })
+    expect(next).toEqual({ moves: [], scores: { X: 0, O: 0, draws: 0 }, round: 1, mode: 'easy' })
+  })
+
+  it('keeps the state when the mode is unchanged', () => {
+    const once = play(fresh, 0)
+    expect(reducer(once, { type: 'SET_MODE', mode: 'two-player' })).toBe(once)
+  })
+
+  it('keeps the mode when scores are reset', () => {
+    const next = reducer({ ...fresh, mode: 'hard', round: 5 }, { type: 'RESET_SCORES' })
+    expect(next).toEqual({ ...fresh, mode: 'hard' })
   })
 })
 

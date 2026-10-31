@@ -1,5 +1,6 @@
 import { Board } from './components/Board'
 import { GameControls } from './components/GameControls'
+import { ModeSelect } from './components/ModeSelect'
 import { ResetScores } from './components/ResetScores'
 import { ScoreBoard } from './components/ScoreBoard'
 import { StatusBar } from './components/StatusBar'
@@ -22,17 +23,20 @@ export default function App() {
           <p className="mt-1 text-sm text-ink-muted">Two players, one device. Rounds alternate who starts.</p>
         </header>
         <main className="flex flex-col gap-5">
+          <ModeSelect mode={game.mode} onChange={game.setMode} />
           <StatusBar
             status={game.status}
             currentPlayer={game.currentPlayer}
             round={game.round}
             starter={game.starter}
+            mode={game.mode}
           />
           <Board
             board={game.board}
             winResult={game.winResult}
             draw={game.draw}
             gameOver={game.gameOver}
+            locked={game.locked}
             currentPlayer={game.currentPlayer}
             onPlay={game.play}
           />

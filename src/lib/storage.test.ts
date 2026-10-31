@@ -22,7 +22,12 @@ afterEach(() => {
 describe('loadProgress', () => {
   it('returns saved progress', () => {
     stubStorage(JSON.stringify({ scores: { X: 2, O: 1, draws: 3 }, round: 7 }))
-    expect(loadProgress()).toEqual({ scores: { X: 2, O: 1, draws: 3 }, round: 7 })
+    expect(loadProgress()).toEqual({ scores: { X: 2, O: 1, draws: 3 }, round: 7, mode: 'two-player' })
+  })
+
+  it('returns a saved mode', () => {
+    stubStorage(JSON.stringify({ scores: { X: 0, O: 0, draws: 0 }, round: 1, mode: 'hard' }))
+    expect(loadProgress()?.mode).toBe('hard')
   })
 
   it.each([
@@ -31,6 +36,7 @@ describe('loadProgress', () => {
     ['negative score', JSON.stringify({ scores: { X: -1, O: 0, draws: 0 }, round: 1 })],
     ['fractional score', JSON.stringify({ scores: { X: 1.5, O: 0, draws: 0 }, round: 1 })],
     ['round below 1', JSON.stringify({ scores: { X: 0, O: 0, draws: 0 }, round: 0 })],
+    ['unknown mode', JSON.stringify({ scores: { X: 0, O: 0, draws: 0 }, round: 1, mode: 'impossible' })],
     ['wrong shape', JSON.stringify({ X: 1 })],
   ])('returns null for %s', (_name, raw) => {
     stubStorage(raw)
@@ -50,10 +56,11 @@ describe('loadProgress', () => {
 describe('saveProgress', () => {
   it('writes JSON', () => {
     const store = stubStorage(null)
-    saveProgress({ scores: { X: 1, O: 0, draws: 0 }, round: 2 })
+    saveProgress({ scores: { X: 1, O: 0, draws: 0 }, round: 2, mode: 'easy' })
     expect(JSON.parse(store.get(KEY) ?? 'null')).toEqual({
       scores: { X: 1, O: 0, draws: 0 },
       round: 2,
+      mode: 'easy',
     })
   })
 
@@ -63,7 +70,7 @@ describe('saveProgress', () => {
         throw new Error('full')
       },
     })
-    expect(() => saveProgress({ scores: { X: 0, O: 0, draws: 0 }, round: 1 })).not.toThrow()
+    expect(() => saveProgress({ scores: { X: 0, O: 0, draws: 0 }, round: 1, mode: 'two-player' })).not.toThrow()
   })
 })
 

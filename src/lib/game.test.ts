@@ -7,8 +7,10 @@ import {
   getStarter,
   getBoard,
   getLineSegment,
+  getPlayerNames,
   getStatusText,
   getUndoMoves,
+  isMode,
   isDraw,
 } from './game'
 import type { Board, Cell, Player } from '../types'
@@ -110,8 +112,39 @@ describe('getBoard', () => {
 })
 
 describe('getUndoMoves', () => {
-  it('drops the last move, or returns null when there are none', () => {
-    expect(getUndoMoves([1, 2, 3])).toEqual([1, 2])
-    expect(getUndoMoves([])).toBeNull()
+  it('two players: drops the last move, or returns null when there are none', () => {
+    expect(getUndoMoves([1, 2, 3], 'X', 'two-player')).toEqual([1, 2])
+    expect(getUndoMoves([], 'X', 'two-player')).toBeNull()
+  })
+
+  it('against the computer: goes back to the human move before the reply', () => {
+    expect(getUndoMoves([4, 0], 'X', 'hard')).toEqual([])
+    expect(getUndoMoves([4, 0, 8, 2], 'X', 'easy')).toEqual([4, 0])
+    expect(getUndoMoves([4, 0, 8], 'O', 'hard')).toEqual([4])
+  })
+
+  it('against the computer: nothing to undo until the human has moved', () => {
+    expect(getUndoMoves([], 'X', 'hard')).toBeNull()
+    expect(getUndoMoves([4], 'O', 'hard')).toBeNull()
+  })
+})
+
+describe('mode text', () => {
+  it('names the players', () => {
+    expect(getPlayerNames('two-player')).toEqual({ X: 'Player X', O: 'Player O' })
+    expect(getPlayerNames('hard')).toEqual({ X: 'You', O: 'Computer' })
+  })
+
+  it('words the status for the computer modes', () => {
+    expect(getStatusText(null, false, 'X', 'easy')).toBe('Your turn')
+    expect(getStatusText(null, false, 'O', 'easy')).toBe("Computer's turn")
+    expect(getStatusText({ winner: 'X', line: [0, 1, 2] }, false, null, 'hard')).toBe('You win!')
+    expect(getStatusText({ winner: 'O', line: [0, 1, 2] }, false, null, 'hard')).toBe('Computer wins!')
+    expect(getStatusText(null, true, null, 'hard')).toBe("It's a draw!")
+  })
+
+  it('recognises valid modes only', () => {
+    expect(isMode('easy')).toBe(true)
+    expect(isMode('impossible')).toBe(false)
   })
 })

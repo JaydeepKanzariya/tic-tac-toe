@@ -1,4 +1,4 @@
-import type { Board, Cell, Player, WinResult } from '../types'
+import type { Board, Cell, Mode, Player, WinResult } from '../types'
 
 export const WINNING_LINES: readonly (readonly [number, number, number])[] = [
   [0, 1, 2],
@@ -10,6 +10,12 @@ export const WINNING_LINES: readonly (readonly [number, number, number])[] = [
   [0, 4, 8],
   [2, 4, 6],
 ]
+
+export const MODES: readonly Mode[] = ['two-player', 'easy', 'hard']
+
+export function isMode(value: unknown): value is Mode {
+  return typeof value === 'string' && (MODES as readonly string[]).includes(value)
+}
 
 export function createEmptyBoard(): Board {
   return Array.from({ length: 9 }, () => null)
@@ -34,22 +40,41 @@ export function getStarter(round: number): Player {
   return round % 2 === 1 ? 'X' : 'O'
 }
 
-function getOpponent(player: Player): Player {
+export function getOpponent(player: Player): Player {
   return player === 'X' ? 'O' : 'X'
+}
+
+function getMovePlayer(order: number, starter: Player): Player {
+  return order % 2 === 0 ? starter : getOpponent(starter)
 }
 
 /** Rebuilds the board by replaying the moves, alternating from the round's starter. */
 export function getBoard(moves: readonly number[], starter: Player): Board {
   const board = Array.from({ length: 9 }, (): Cell => null)
   moves.forEach((index, order) => {
-    board[index] = order % 2 === 0 ? starter : getOpponent(starter)
+    board[index] = getMovePlayer(order, starter)
   })
   return board
 }
 
-/** The moves left after taking back the last one, or null when there is nothing to undo. */
-export function getUndoMoves(moves: readonly number[]): readonly number[] | null {
-  return moves.length === 0 ? null : moves.slice(0, -1)
+/**
+ * The moves left after an undo, or null when there is nothing to undo. Against the
+ * computer the human (X) goes back to their own previous move, taking the computer's reply with it.
+ */
+export function getUndoMoves(
+  moves: readonly number[],
+  starter: Player,
+  mode: Mode,
+): readonly number[] | null {
+  if (mode === 'two-player') {
+    return moves.length === 0 ? null : moves.slice(0, -1)
+  }
+  for (let order = moves.length - 1; order >= 0; order--) {
+    if (getMovePlayer(order, starter) === 'X') {
+      return moves.slice(0, order)
+    }
+  }
+  return null
 }
 
 export function getNextPlayer(board: Board, starter: Player): Player {
@@ -60,18 +85,29 @@ export function getNextPlayer(board: Board, starter: Player): Player {
   return starter === 'X' ? 'O' : 'X'
 }
 
+export function getPlayerNames(mode: Mode): Record<Player, string> {
+  return mode === 'two-player' ? { X: 'Player X', O: 'Player O' } : { X: 'You', O: 'Computer' }
+}
+
 export function getStatusText(
   winResult: WinResult | null,
   draw: boolean,
   currentPlayer: Player | null,
+  mode: Mode = 'two-player',
 ): string {
   if (winResult) {
-    return `Player ${winResult.winner} wins!`
+    if (mode === 'two-player') {
+      return `Player ${winResult.winner} wins!`
+    }
+    return winResult.winner === 'X' ? 'You win!' : 'Computer wins!'
   }
   if (draw || currentPlayer === null) {
     return "It's a draw!"
   }
-  return `Player ${currentPlayer}'s turn`
+  if (mode === 'two-player') {
+    return `Player ${currentPlayer}'s turn`
+  }
+  return currentPlayer === 'X' ? 'Your turn' : "Computer's turn"
 }
 
 export interface LineSegment {

@@ -6,13 +6,14 @@ import {
   isDraw,
 } from './game'
 import { loadProgress } from './storage'
-import type { GameState, Scores } from '../types'
+import type { GameState, Mode, Scores } from '../types'
 
 export type GameAction =
   | { type: 'PLAY'; index: number }
   | { type: 'NEW_GAME' }
   | { type: 'UNDO' }
   | { type: 'RESET_SCORES' }
+  | { type: 'SET_MODE'; mode: Mode }
 
 const ZERO_SCORES: Scores = { X: 0, O: 0, draws: 0 }
 
@@ -22,11 +23,12 @@ export function createInitialState(): GameState {
     moves: [],
     scores: progress?.scores ?? ZERO_SCORES,
     round: progress?.round ?? 1,
+    mode: progress?.mode ?? 'two-player',
   }
 }
 
 export function reducer(state: GameState, action: GameAction): GameState {
-  const { moves, scores, round } = state
+  const { moves, scores, round, mode } = state
   const starter = getStarter(round)
   const board = getBoard(moves, starter)
   const finished = calculateWinner(board) !== null || isDraw(board)
@@ -49,12 +51,14 @@ export function reducer(state: GameState, action: GameAction): GameState {
       return { ...state, moves: nextMoves }
     }
     case 'UNDO': {
-      const undone = finished ? null : getUndoMoves(moves)
+      const undone = finished ? null : getUndoMoves(moves, starter, mode)
       return undone === null ? state : { ...state, moves: undone }
     }
     case 'NEW_GAME':
       return { ...state, moves: [], round: round + 1 }
     case 'RESET_SCORES':
-      return { moves: [], scores: ZERO_SCORES, round: 1 }
+      return { ...state, moves: [], scores: ZERO_SCORES, round: 1 }
+    case 'SET_MODE':
+      return action.mode === mode ? state : { moves: [], scores: ZERO_SCORES, round: 1, mode: action.mode }
   }
 }

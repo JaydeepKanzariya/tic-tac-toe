@@ -8,13 +8,14 @@ interface BoardProps {
   winResult: WinResult | null
   draw: boolean
   gameOver: boolean
+  locked: boolean
   currentPlayer: Player | null
   onPlay: (index: number) => void
 }
 
 const COLUMNS = 3
 
-export function Board({ board, winResult, draw, gameOver, currentPlayer, onPlay }: BoardProps) {
+export function Board({ board, winResult, draw, gameOver, locked, currentPlayer, onPlay }: BoardProps) {
   const { activeIndex, setActiveIndex, register, onKeyDown } = useRovingFocus(
     board.length,
     COLUMNS,
@@ -41,7 +42,7 @@ export function Board({ board, winResult, draw, gameOver, currentPlayer, onPlay 
             label={label}
             isWinning={isWinning}
             dimmed={winResult !== null && !isWinning}
-            disabled={cell !== null || gameOver}
+            disabled={cell !== null || gameOver || locked}
             previewPlayer={currentPlayer}
             tabIndex={index === activeIndex ? 0 : -1}
             buttonRef={register(index)}

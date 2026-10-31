@@ -1,6 +1,8 @@
 export type Player = 'X' | 'O'
 export type Cell = Player | null
 export type Board = readonly Cell[]
+export type Difficulty = 'easy' | 'hard'
+export type Mode = 'two-player' | Difficulty
 
 export interface WinResult {
   winner: Player
@@ -17,4 +19,5 @@ export interface GameState {
   moves: readonly number[]
   scores: Scores
   round: number
+  mode: Mode
 }

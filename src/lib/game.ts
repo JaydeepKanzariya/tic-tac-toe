@@ -1,4 +1,4 @@
-import type { Board, Player, WinResult } from '../types'
+import type { Board, Cell, Player, WinResult } from '../types'
 
 export const WINNING_LINES: readonly (readonly [number, number, number])[] = [
   [0, 1, 2],
@@ -32,6 +32,24 @@ export function isDraw(board: Board): boolean {
 
 export function getStarter(round: number): Player {
   return round % 2 === 1 ? 'X' : 'O'
+}
+
+function getOpponent(player: Player): Player {
+  return player === 'X' ? 'O' : 'X'
+}
+
+/** Rebuilds the board by replaying the moves, alternating from the round's starter. */
+export function getBoard(moves: readonly number[], starter: Player): Board {
+  const board = Array.from({ length: 9 }, (): Cell => null)
+  moves.forEach((index, order) => {
+    board[index] = order % 2 === 0 ? starter : getOpponent(starter)
+  })
+  return board
+}
+
+/** The moves left after taking back the last one, or null when there is nothing to undo. */
+export function getUndoMoves(moves: readonly number[]): readonly number[] | null {
+  return moves.length === 0 ? null : moves.slice(0, -1)
 }
 
 export function getNextPlayer(board: Board, starter: Player): Player {

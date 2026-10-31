@@ -1,23 +1,27 @@
 import { describe, expect, it } from 'vitest'
-import { createEmptyBoard } from './game'
+import { getBoard } from './game'
 import { reducer } from './gameReducer'
 import type { GameState } from '../types'
 
-const fresh: GameState = { board: createEmptyBoard(), scores: { X: 0, O: 0, draws: 0 }, round: 1 }
+const fresh: GameState = { moves: [], scores: { X: 0, O: 0, draws: 0 }, round: 1 }
 
 function play(state: GameState, ...moves: number[]): GameState {
   return moves.reduce((next, index) => reducer(next, { type: 'PLAY', index }), state)
 }
 
+function boardOf(state: GameState) {
+  return getBoard(state.moves, state.round % 2 === 1 ? 'X' : 'O')
+}
+
 describe('reducer PLAY', () => {
   it('places X first in round 1 and alternates', () => {
-    const state = play(fresh, 0, 1)
-    expect(state.board[0]).toBe('X')
-    expect(state.board[1]).toBe('O')
+    const board = boardOf(play(fresh, 0, 1))
+    expect(board[0]).toBe('X')
+    expect(board[1]).toBe('O')
   })
 
   it('starts with O in round 2', () => {
-    expect(play({ ...fresh, round: 2 }, 4).board[4]).toBe('O')
+    expect(boardOf(play({ ...fresh, round: 2 }, 4))[4]).toBe('O')
   })
 
   it('ignores occupied cells and invalid indexes', () => {
@@ -28,10 +32,10 @@ describe('reducer PLAY', () => {
     expect(reducer(once, { type: 'PLAY', index: 1.5 })).toBe(once)
   })
 
-  it('does not mutate the previous board', () => {
-    const before = fresh.board
+  it('does not mutate the previous moves', () => {
+    const before = fresh.moves
     play(fresh, 0)
-    expect(before.every((cell) => cell === null)).toBe(true)
+    expect(before).toHaveLength(0)
   })
 
   it('counts a win once and locks the board', () => {
@@ -51,10 +55,27 @@ describe('reducer PLAY', () => {
   })
 })
 
+describe('reducer UNDO', () => {
+  it('takes back the last move and hands the turn back', () => {
+    const undone = reducer(play(fresh, 0, 4), { type: 'UNDO' })
+    expect(undone.moves).toEqual([0])
+    expect(play(undone, 8).moves).toEqual([0, 8])
+  })
+
+  it('does nothing on an empty board', () => {
+    expect(reducer(fresh, { type: 'UNDO' })).toBe(fresh)
+  })
+
+  it('does nothing once the round is finished, so scores stay correct', () => {
+    const won = play(fresh, 0, 3, 1, 4, 2)
+    expect(reducer(won, { type: 'UNDO' })).toBe(won)
+  })
+})
+
 describe('reducer NEW_GAME and RESET_SCORES', () => {
   it('clears the board, keeps scores and advances the round', () => {
     const next = reducer(play(fresh, 0, 3, 1, 4, 2), { type: 'NEW_GAME' })
-    expect(next.board.every((cell) => cell === null)).toBe(true)
+    expect(next.moves).toHaveLength(0)
     expect(next.scores.X).toBe(1)
     expect(next.round).toBe(2)
   })

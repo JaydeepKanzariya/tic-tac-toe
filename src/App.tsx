@@ -36,7 +36,7 @@ export default function App() {
             currentPlayer={game.currentPlayer}
             onPlay={game.play}
           />
-          <GameControls onNewGame={game.newGame} />
+          <GameControls canUndo={game.canUndo} onNewGame={game.newGame} onUndo={game.undo} />
           <div className="flex flex-col gap-1">
             <ScoreBoard scores={game.scores} />
             <ResetScores canReset={game.canResetScores} onReset={game.resetScores} />

@@ -5,8 +5,10 @@ import {
   createEmptyBoard,
   getNextPlayer,
   getStarter,
+  getBoard,
   getLineSegment,
   getStatusText,
+  getUndoMoves,
   isDraw,
 } from './game'
 import type { Board, Cell, Player } from '../types'
@@ -96,5 +98,20 @@ describe('getLineSegment', () => {
         expect(value).toBeLessThan(3)
       }
     }
+  })
+})
+
+describe('getBoard', () => {
+  it('replays moves alternating from the starter', () => {
+    expect(getBoard([4, 0, 8], 'X')).toEqual(boardWith({ 4: 'X', 0: 'O', 8: 'X' }))
+    expect(getBoard([4, 0], 'O')).toEqual(boardWith({ 4: 'O', 0: 'X' }))
+    expect(getBoard([], 'X')).toEqual(createEmptyBoard())
+  })
+})
+
+describe('getUndoMoves', () => {
+  it('drops the last move, or returns null when there are none', () => {
+    expect(getUndoMoves([1, 2, 3])).toEqual([1, 2])
+    expect(getUndoMoves([])).toBeNull()
   })
 })

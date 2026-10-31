@@ -14,7 +14,7 @@ export interface Scores {
 }
 
 export interface GameState {
-  board: Board
+  moves: readonly number[]
   scores: Scores
   round: number
 }

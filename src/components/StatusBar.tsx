@@ -53,7 +53,7 @@ export function StatusBar({ status, currentPlayer, round, starter, mode }: Statu
         ))}
       </div>
       <p className="text-sm text-ink-muted">
-        Round <span className="tabular-nums">{round}</span> · {names[starter]} starts
+        Round <span className="tabular-nums">{round}</span> · {names[starter]} {starter === 'X' && mode !== 'two-player' ? 'start' : 'starts'}
       </p>
     </section>
   )

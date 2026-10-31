@@ -223,7 +223,7 @@ describe('computer opponent', () => {
     await playAll(user, X_WINS_TOP_ROW)
     await user.selectOptions(screen.getByLabelText('Opponent'), 'hard')
     expect(score('X wins')).toBe('0')
-    expect(round()).toBe('Round 1 · You starts')
+    expect(round()).toBe('Round 1 · You start')
   })
 })
 

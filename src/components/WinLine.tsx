@@ -20,7 +20,7 @@ export function WinLine({ line }: WinLineProps) {
         x2={x2}
         y2={y2}
         stroke="currentColor"
-        strokeWidth={0.1}
+        strokeWidth={0.05}
         strokeLinecap="round"
         pathLength={1}
         strokeDasharray={1}

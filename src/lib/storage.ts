@@ -1,6 +1,9 @@
+import { isTheme } from './theme'
+import type { Theme } from './theme'
 import type { Scores } from '../types'
 
 const STORAGE_KEY = 'tic-tac-toe:progress'
+export const THEME_KEY = 'tic-tac-toe:theme'
 
 export interface Progress {
   scores: Scores
@@ -41,5 +44,22 @@ export function saveProgress(progress: Progress): void {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(progress))
   } catch {
     // Storage may be unavailable or full; the game keeps working in memory.
+  }
+}
+
+export function loadTheme(): Theme {
+  try {
+    const raw = localStorage.getItem(THEME_KEY)
+    return isTheme(raw) ? raw : 'system'
+  } catch {
+    return 'system'
+  }
+}
+
+export function saveTheme(theme: Theme): void {
+  try {
+    localStorage.setItem(THEME_KEY, theme)
+  } catch {
+    // Storage may be unavailable; the theme still applies for this session.
   }
 }

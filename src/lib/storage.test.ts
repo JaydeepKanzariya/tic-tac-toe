@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { loadProgress, saveProgress } from './storage'
+import { THEME_KEY, loadProgress, loadTheme, saveProgress, saveTheme } from './storage'
 
 const KEY = 'tic-tac-toe:progress'
 
@@ -64,5 +64,29 @@ describe('saveProgress', () => {
       },
     })
     expect(() => saveProgress({ scores: { X: 0, O: 0, draws: 0 }, round: 1 })).not.toThrow()
+  })
+})
+
+describe('theme storage', () => {
+  it('returns a saved theme and falls back to system', () => {
+    const store = new Map<string, string>([[THEME_KEY, 'dark']])
+    vi.stubGlobal('localStorage', {
+      getItem: (key: string) => store.get(key) ?? null,
+      setItem: (key: string, value: string) => void store.set(key, value),
+    })
+    expect(loadTheme()).toBe('dark')
+    store.set(THEME_KEY, 'sepia')
+    expect(loadTheme()).toBe('system')
+    saveTheme('light')
+    expect(store.get(THEME_KEY)).toBe('light')
+  })
+
+  it('does not throw when storage is unavailable', () => {
+    const blocked = () => {
+      throw new Error('blocked')
+    }
+    vi.stubGlobal('localStorage', { getItem: blocked, setItem: blocked })
+    expect(loadTheme()).toBe('system')
+    expect(() => saveTheme('dark')).not.toThrow()
   })
 })

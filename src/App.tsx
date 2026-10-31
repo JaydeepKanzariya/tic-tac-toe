@@ -3,17 +3,21 @@ import { GameControls } from './components/GameControls'
 import { ResetScores } from './components/ResetScores'
 import { ScoreBoard } from './components/ScoreBoard'
 import { StatusBar } from './components/StatusBar'
+import { ThemeToggle } from './components/ThemeToggle'
 import { useGame } from './hooks/useGame'
+import { useTheme } from './hooks/useTheme'
 
 const SOURCE_URL = 'https://github.com/JaydeepKanzariya/tic-tac-toe'
 
 export default function App() {
   const game = useGame()
+  const { theme, cycleTheme } = useTheme()
 
   return (
     <div className="flex min-h-svh flex-col items-center justify-center bg-page p-4 font-sans text-ink">
       <div className="w-full max-w-lg rounded-2xl border border-line bg-card p-4 shadow-lg sm:p-6">
-        <header className="mb-4 text-center">
+        <header className="relative mb-4 text-center">
+          <ThemeToggle theme={theme} onCycle={cycleTheme} />
           <h1 className="text-3xl font-extrabold text-accent-ink">Tic Tac Toe</h1>
           <p className="mt-1 text-sm text-ink-muted">Two players, one device. Rounds alternate who starts.</p>
         </header>

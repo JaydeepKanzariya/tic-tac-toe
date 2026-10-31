@@ -4,46 +4,39 @@
  * Design tokens. Components use semantic utilities (bg-card, text-ink, ...)
  * and never reference a palette colour or a `dark:` variant directly, so a
  * theme is changed in this one file.
+ *
+ * Each token is `light-dark(<light>, <dark>)`. By default the colour scheme
+ * follows the system; `data-theme` on <html> (set by the theme toggle)
+ * forces one of the two.
  */
 :root {
   color-scheme: light dark;
 
-  --page: var(--color-slate-100);
-  --card: #fff;
-  --cell: #fff;
-  --cell-hover: var(--color-slate-50);
-  --subtle: var(--color-slate-100);
-  --line: var(--color-slate-200);
-  --grid: var(--color-slate-300);
-  --ink: var(--color-slate-900);
-  --ink-muted: var(--color-slate-600);
+  --page: light-dark(var(--color-slate-100), var(--color-slate-950));
+  --card: light-dark(#fff, var(--color-slate-900));
+  --cell: light-dark(#fff, var(--color-slate-900));
+  --cell-hover: light-dark(var(--color-slate-50), var(--color-slate-800));
+  --subtle: light-dark(var(--color-slate-100), var(--color-slate-800));
+  --line: light-dark(var(--color-slate-200), var(--color-slate-800));
+  --grid: light-dark(var(--color-slate-300), var(--color-slate-600));
+  --ink: light-dark(var(--color-slate-900), var(--color-slate-100));
+  --ink-muted: light-dark(var(--color-slate-600), var(--color-slate-300));
   --accent: var(--color-rose-600);
   --accent-hover: var(--color-rose-700);
   --on-accent: #fff;
-  --accent-soft: var(--color-rose-100);
-  --accent-ink: var(--color-rose-600);
-  --focus: var(--color-rose-500);
-  --mark-x: var(--color-rose-600);
-  --mark-o: var(--color-sky-600);
+  --accent-soft: light-dark(var(--color-rose-100), var(--color-rose-950));
+  --accent-ink: light-dark(var(--color-rose-600), var(--color-rose-400));
+  --focus: light-dark(var(--color-rose-500), var(--color-rose-400));
+  --mark-x: light-dark(var(--color-rose-600), var(--color-rose-400));
+  --mark-o: light-dark(var(--color-sky-600), var(--color-sky-400));
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --page: var(--color-slate-950);
-    --card: var(--color-slate-900);
-    --cell: var(--color-slate-900);
-    --cell-hover: var(--color-slate-800);
-    --subtle: var(--color-slate-800);
-    --line: var(--color-slate-800);
-    --grid: var(--color-slate-600);
-    --ink: var(--color-slate-100);
-    --ink-muted: var(--color-slate-300);
-    --accent-soft: var(--color-rose-950);
-    --accent-ink: var(--color-rose-400);
-    --focus: var(--color-rose-400);
-    --mark-x: var(--color-rose-400);
-    --mark-o: var(--color-sky-400);
-  }
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 @theme inline {

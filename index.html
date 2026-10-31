@@ -27,6 +27,16 @@
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="Tic Tac Toe board with X winning on the diagonal" />
     <meta name="twitter:card" content="summary_large_image" />
+    <script>
+      try {
+        var theme = localStorage.getItem('tic-tac-toe:theme')
+        if (theme === 'light' || theme === 'dark') {
+          document.documentElement.setAttribute('data-theme', theme)
+        }
+      } catch (error) {
+        // Storage unavailable: follow the system theme.
+      }
+    </script>
     <title>Tic Tac Toe</title>
   </head>
   <body>

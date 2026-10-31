@@ -1,5 +1,6 @@
 import { Board } from './components/Board'
 import { GameControls } from './components/GameControls'
+import { ResetScores } from './components/ResetScores'
 import { ScoreBoard } from './components/ScoreBoard'
 import { StatusBar } from './components/StatusBar'
 import { useGame } from './hooks/useGame'
@@ -31,12 +32,11 @@ export default function App() {
             currentPlayer={game.currentPlayer}
             onPlay={game.play}
           />
-          <ScoreBoard scores={game.scores} />
-          <GameControls
-            canResetScores={game.canResetScores}
-            onNewGame={game.newGame}
-            onResetScores={game.resetScores}
-          />
+          <GameControls onNewGame={game.newGame} />
+          <div className="flex flex-col gap-1">
+            <ScoreBoard scores={game.scores} />
+            <ResetScores canReset={game.canResetScores} onReset={game.resetScores} />
+          </div>
         </main>
         <footer className="mt-5 text-center text-xs text-ink-muted">
           <span>© 2026 Jaydeep Kanzariya</span>
